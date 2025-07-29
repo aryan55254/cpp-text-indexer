@@ -6,6 +6,7 @@
 #include <string>
 #include <cctype>
 #include <sstream>
+#include <map>
 
 void to_lowercase(std::string &str)
 {
@@ -42,6 +43,12 @@ int main()
         docwords.push_back(docword);
     }
     std::cout << "Cleaning complete." << std::endl;
+
+    std::map<std::string, int> word_index;
+    for (std::string word : docwords)
+    {
+        word_index[word]++;
+    }
 
     return 0;
 }
