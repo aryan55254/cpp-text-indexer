@@ -7,6 +7,7 @@
 #include <cctype>
 #include <sstream>
 #include <map>
+#include <set>
 
 void to_lowercase(std::string &str)
 {
@@ -26,29 +27,29 @@ void remove_punctuation(std::string &str)
 
 int main()
 {
-    std::ifstream inputfile("doc1.txt");
-    if (!inputfile.is_open())
+    std::vector<std::string> filenames = {"doc1.txt", "doc2.txt", "doc3.txt"};
+    std::map<std::string, std::set<std::string>> word_index;
+    for (std::string filename : filenames)
     {
-        std::cerr << "error opening the file" << std::endl;
-        return 1;
-    }
-    std::cout << "Reading words from file..." << std::endl;
-    std::vector<std::string> docwords;
-    std::string docword;
-    std::cout << "Cleaning and normalizing words..." << std::endl;
-    while (inputfile >> docword)
-    {
-        remove_punctuation(docword);
-        to_lowercase(docword);
-        docwords.push_back(docword);
-    }
-    std::cout << "Cleaning complete." << std::endl;
+        std::ifstream inputfile(filename);
+        if (!inputfile.is_open())
+        {
+            std::cerr << "error opening the file" << std::endl;
+            return 1;
+        };
+        std::vector<std::string> docwords;
+        std::string docword;
+        while (inputfile >> docword)
+        {
+            remove_punctuation(docword);
+            to_lowercase(docword);
+            docwords.push_back(docword);
+        }
 
-    std::map<std::string, int> word_index;
-    for (std::string word : docwords)
-    {
-        word_index[word]++;
+        for (std::string word : docwords)
+        {
+            word_index[word].insert(filename);
+        };
     }
-
     return 0;
 }
