@@ -8,6 +8,7 @@
 #include <sstream>
 #include <map>
 #include <set>
+#include <limits>
 
 void to_lowercase(std::string &str)
 {
@@ -51,5 +52,44 @@ int main()
             word_index[word].insert(filename);
         };
     }
+    std::cout << "\n--- Index built. Type 'y' to start search  ---\n";
+    char keepgoing;
+    std::cin >> keepgoing;
+    while (keepgoing == 'y')
+    {
+        std::string userinput;
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "enter a word to search (or press ctrl + c to quit): " << std::endl;
+        while (!std::getline(std::cin, userinput))
+        {
+            std::cout << "invalid input , enter a string : " << std::endl;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        };
+        remove_punctuation(userinput);
+        to_lowercase(userinput);
+        auto it = word_index.find(userinput);
+
+        if (it != word_index.end())
+        {
+            std::cout << userinput << " = [ ";
+
+            for (const std::string &filename : it->second)
+            {
+                std::cout << filename << " ";
+            }
+
+            std::cout << "]" << std::endl;
+        }
+        else
+        {
+
+            std::cout << "Sorry, the word '" << userinput << "' was not found in any file." << std::endl;
+        }
+        std::cout << "continue searrching (y/n) : " << std::endl;
+        std::cin >> keepgoing;
+    }
+
     return 0;
 }
